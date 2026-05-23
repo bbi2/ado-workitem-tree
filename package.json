@@ -1,0 +1,17 @@
+{
+  "name": "ado-workitem-tree",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable Azure DevOps work item tree panel (Express API + vanilla browser UI).",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/*.test.js test/integration/*.test.js",
+    "test:coverage": "node --test --test-concurrency=1 --experimental-test-coverage --test-coverage-include=server/** --test-coverage-include=client/** test/*.test.js test/integration/*.test.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "peerDependencies": {
+    "express": "^4.21.0"
+  }
+}

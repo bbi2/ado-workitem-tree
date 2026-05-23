@@ -1,0 +1,35 @@
+<!-- Azure DevOps work item panel — copy into your page or include via server template -->
+<hr class="ado-divider" aria-hidden="true" />
+<section class="ado-workitem-panel" aria-labelledby="ado-workitem-heading">
+  <h2 id="ado-workitem-heading" class="ado-panel-heading">Azure DevOps</h2>
+  <div class="ado-link-row">
+    <label class="sr-only" for="ado-workitem-input">Work item ID</label>
+    <input
+      id="ado-workitem-input"
+      class="ado-workitem-input"
+      type="text"
+      inputmode="numeric"
+      autocomplete="off"
+      placeholder="Work item ID or URL"
+    />
+    <button type="button" id="btn-ado-link">Link</button>
+    <span class="ado-link-summary">
+      <span id="ado-task-hours-total" class="ado-task-hours-total" hidden></span>
+      <span
+        id="ado-link-loading"
+        class="ado-link-loading"
+        hidden
+        role="status"
+        aria-live="polite"
+        aria-label="Loading Azure DevOps work items"
+      ></span>
+    </span>
+  </div>
+  <p class="ado-signin-hint" id="ado-auth-hint" hidden>
+    <button type="button" id="btn-ado-signin" class="ado-signin-btn" hidden>
+      Sign in to Azure DevOps
+    </button>
+  </p>
+  <p id="ado-workitem-status" class="ado-workitem-status sr-only" role="status" aria-live="polite"></p>
+  <div id="ado-workitem-result" class="ado-workitem-result" hidden></div>
+</section>

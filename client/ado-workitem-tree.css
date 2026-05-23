@@ -1,0 +1,485 @@
+.ado-divider {
+  margin: 1.25rem 0 0.75rem;
+  border: none;
+  border-top: 1px solid var(--border, #d4d4d8);
+}
+
+.ado-workitem-panel {
+  margin-bottom: 1rem;
+}
+
+.ado-panel-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-h, #111);
+}
+
+.ado-link-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.ado-workitem-input {
+  flex: 0 0 auto;
+  width: 14rem;
+  max-width: min(14rem, 100%);
+  box-sizing: border-box;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: var(--input-bg, #fff);
+  color: var(--text);
+}
+
+.ado-link-row button {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border, #ccc);
+  background: var(--btn-bg, #f4f4f5);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.ado-link-row button:hover {
+  background: var(--btn-hover, #e9e9eb);
+}
+
+.ado-link-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+}
+
+.ado-task-hours-total {
+  flex: 0 0 auto;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-h, #111);
+  white-space: nowrap;
+}
+
+.ado-link-loading {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--border, #ccc);
+  border-top-color: var(--text-h, #111);
+  border-radius: 50%;
+  animation: ado-link-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+.ado-link-loading[hidden] {
+  display: none;
+}
+
+@keyframes ado-link-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ado-signin-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #555);
+}
+
+.ado-signin-btn {
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--border, #ccc);
+  background: var(--btn-bg, #f4f4f5);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.ado-signin-btn:hover {
+  background: var(--btn-hover, #e9e9eb);
+}
+
+.ado-error-actions {
+  width: 100%;
+}
+
+.ado-error-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin-top: 0.65rem;
+}
+
+.ado-error-external-link {
+  font-size: 0.88rem;
+}
+
+.ado-needs-login-msg {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, #555);
+  max-width: 40rem;
+}
+
+.ado-workitem-status {
+  margin: 0.5rem 0 0;
+  min-height: 1.2em;
+  font-size: 0.85rem;
+  color: var(--text-muted, #555);
+}
+
+.ado-workitem-status.is-error {
+  color: #b91c1c;
+}
+
+.ado-workitem-result {
+  margin-top: 0.65rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.ado-workitem-result.is-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.ado-workitem-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.ado-workitem-details dt {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-muted, #555);
+}
+
+.ado-workitem-details dd {
+  margin: 0;
+  color: var(--text-h, #111);
+  word-break: break-word;
+}
+
+.ado-workitem-id-link {
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ado-workitem-id-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.ado-workitem-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #b91c1c;
+}
+
+.ado-workitem-result .ado-signin-btn {
+  margin-top: 0.5rem;
+}
+
+.ado-list-cell {
+  white-space: nowrap;
+}
+
+.ado-tree-wrap {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  border: 1px solid #e1e1e1;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.ado-workitem-tree {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  table-layout: fixed;
+}
+
+.ado-workitem-tree th,
+.ado-workitem-tree td {
+  padding: 0.45rem 0.65rem;
+  border-bottom: 1px solid #edebe9;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ado-workitem-tree th {
+  font-weight: 600;
+  color: #323130;
+  background: #f3f2f1;
+  border-bottom: 1px solid #e1dfdd;
+  white-space: nowrap;
+}
+
+.ado-workitem-tree th.ado-col-hours,
+.ado-workitem-tree td.ado-tree-hours {
+  text-align: right;
+}
+
+.ado-workitem-tree tbody tr.ado-tree-row:hover {
+  background: #f0f6ff;
+}
+
+.ado-workitem-tree tbody tr.ado-tree-row-root {
+  background: #f0f6ff;
+}
+
+.ado-tree-gutter {
+  width: 3.25rem;
+  padding: 0.35rem 0.4rem;
+}
+
+.ado-tree-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.ado-tree-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  border: 1px solid #c8c6c4;
+  border-radius: 2px;
+  background: #fff;
+  color: #323130;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.ado-tree-header-btn:focus {
+  outline: 2px solid #0078d4;
+  outline-offset: 1px;
+}
+
+.ado-tree-header-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.ado-tree-header-btn:hover {
+  background: #edebe9;
+}
+
+.ado-col-id {
+  width: 5.5rem;
+}
+
+.ado-col-type {
+  width: 6.5rem;
+}
+
+.ado-tree-type {
+  white-space: nowrap;
+}
+
+.ado-col-title {
+  width: auto;
+}
+
+.ado-tree-title {
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ado-tree-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ado-col-assignee {
+  width: 11rem;
+}
+
+.ado-col-state {
+  width: 7.5rem;
+}
+
+.ado-col-hours {
+  width: 6.5rem;
+}
+
+.ado-tree-id-link {
+  color: #323130;
+  text-decoration: none;
+}
+
+.ado-tree-id-link:hover {
+  text-decoration: underline;
+}
+
+.ado-tree-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: transparent;
+  color: #605e5c;
+  cursor: pointer;
+}
+
+.ado-tree-toggle::before {
+  content: '';
+  display: block;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-right: 1.75px solid currentColor;
+  border-bottom: 1.75px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.ado-tree-toggle[aria-expanded='false']::before {
+  transform: rotate(-45deg);
+}
+
+.ado-tree-toggle:hover {
+  background: #edebe9;
+  color: #323130;
+}
+
+.ado-tree-toggle-spacer {
+  flex: 0 0 auto;
+  width: 1.1rem;
+}
+
+.ado-wi-icon {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  background: center / contain no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%238a8886' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+/* ADO-style work item icon colors */
+.ado-wi-icon--requirement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23773795' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+.ado-wi-icon--initiative {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23FF6A00' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+.ado-wi-icon--user-story {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23009CCC' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+.ado-wi-icon--task {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23F2CB1D' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+.ado-wi-icon--bug {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23CC293D' d='M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11z'/%3E%3Cpath fill='%23fff' d='M6.15 9.05 4.8 7.7l-.7.7 2.05 2.05 4.55-4.55-.7-.7-3.75 3.85z'/%3E%3C/svg%3E");
+}
+
+.ado-tree-title-link {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #0078d4;
+  text-decoration: underline;
+}
+
+.ado-tree-title-link:hover {
+  color: #106ebe;
+}
+
+.ado-tree-assignee {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ado-state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.ado-state-dot {
+  flex: 0 0 auto;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #8a8886;
+}
+
+.ado-state-dot--closed {
+  background: #107c10;
+}
+
+.ado-state-dot--resolved {
+  background: #ff9d48;
+}
+
+.ado-state-dot--new {
+  background: #bdbdbd;
+}
+
+.ado-state-dot--active {
+  background: #0078d4;
+}
+
+.ado-state-text {
+  color: #323130;
+}
+
+.ado-tree-hours.num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ado-tree-hours--rollup {
+  color: #605e5c;
+}
+
+.ado-tree-empty {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #555);
+}
