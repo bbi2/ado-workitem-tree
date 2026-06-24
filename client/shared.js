@@ -107,6 +107,23 @@
     return digits ? { id: digits, org: '', project: '' } : { id: '', org: '', project: '' }
   }
 
+  /** Comma-separated work item ids or URLs (one entry per segment). */
+  function parseWorkItemsFromUserInput(raw) {
+    const s = String(raw || '').trim()
+    if (!s) return []
+    return s
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .map((part) => ({ ...parseWorkItemFromUserInput(part), raw: part }))
+  }
+
+  function normalizeAdoIdList(raw) {
+    return parseWorkItemsFromUserInput(raw)
+      .map((item) => item.id || item.raw)
+      .join(', ')
+  }
+
   return {
     adoStateCategory,
     adoWiIconKind,
@@ -115,5 +132,7 @@
     formatCompletedHours,
     displayCompletedHours,
     parseWorkItemFromUserInput,
+    parseWorkItemsFromUserInput,
+    normalizeAdoIdList,
   }
 })

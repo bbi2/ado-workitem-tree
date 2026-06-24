@@ -249,6 +249,14 @@
   background: #f0f6ff;
 }
 
+.ado-workitem-tree tbody tr.ado-tree-row-invalid {
+  color: #6b7280;
+}
+
+.ado-tree-title-invalid {
+  color: #6b7280;
+}
+
 .ado-tree-gutter {
   width: 3.25rem;
   padding: 0.35rem 0.4rem;

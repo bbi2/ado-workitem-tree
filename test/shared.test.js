@@ -6,6 +6,8 @@ const {
   adoStateCategory,
   adoWiIconKind,
   parseWorkItemFromUserInput,
+  parseWorkItemsFromUserInput,
+  normalizeAdoIdList,
   sumChildTaskCompletedHours,
   displayCompletedHours,
 } = require('../client/shared.js')
@@ -41,6 +43,15 @@ describe('AdoWorkItemShared', () => {
       { id: '2667072', org: 'slb1-swt', project: 'drillops-reporting' },
     )
     assert.deepEqual(parseWorkItemFromUserInput(''), { id: '', org: '', project: '' })
+  })
+
+  it('parseWorkItemsFromUserInput splits comma-separated ids and URLs', () => {
+    assert.deepEqual(parseWorkItemsFromUserInput('2689789, 1234567'), [
+      { id: '2689789', org: '', project: '', raw: '2689789' },
+      { id: '1234567', org: '', project: '', raw: '1234567' },
+    ])
+    assert.equal(normalizeAdoIdList('2689789,1234567'), '2689789, 1234567')
+    assert.equal(parseWorkItemsFromUserInput('bad-id, 42')[0].id, '')
   })
 
   it('sumChildTaskCompletedHours sums only child task hours', () => {

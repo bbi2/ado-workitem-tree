@@ -8,11 +8,15 @@
     adoStateCategory,
     adoWiIconKind,
     parseWorkItemFromUserInput,
+    parseWorkItemsFromUserInput,
+    normalizeAdoIdList,
     sumChildTaskCompletedHours,
     formatCompletedHours,
     displayCompletedHours,
     isTaskWorkItemType,
   } = shared
+
+  const INVALID_CELL = '--'
 
   function el(id) {
     return document.getElementById(id)
@@ -70,7 +74,7 @@
     function getCurrentId() {
       const input = el('ado-workitem-input')
       if (!input) return ''
-      return parseWorkItemFromUserInput(input.value).id || ''
+      return normalizeAdoIdList(input.value)
     }
 
     function azureDevOpsSignInUrl() {
@@ -351,6 +355,52 @@
       return thead
     }
 
+    function renderInvalidWorkItemRow(tbody, displayId) {
+      const tr = document.createElement('tr')
+      tr.className = 'ado-tree-row ado-tree-row-root ado-tree-row-invalid'
+
+      const gutterCell = document.createElement('td')
+      gutterCell.className = 'ado-tree-gutter'
+      tr.appendChild(gutterCell)
+
+      const idCell = document.createElement('td')
+      idCell.className = 'ado-tree-id'
+      idCell.textContent = displayId ? String(displayId) : INVALID_CELL
+
+      const typeCell = document.createElement('td')
+      typeCell.className = 'ado-tree-type'
+      typeCell.textContent = INVALID_CELL
+
+      const titleCell = document.createElement('td')
+      titleCell.className = 'ado-tree-title'
+      const titleWrap = document.createElement('div')
+      titleWrap.className = 'ado-tree-title-wrap'
+      const spacer = document.createElement('span')
+      spacer.className = 'ado-tree-toggle-spacer'
+      spacer.setAttribute('aria-hidden', 'true')
+      titleWrap.appendChild(spacer)
+      const titleText = document.createElement('span')
+      titleText.className = 'ado-tree-title-invalid'
+      titleText.textContent = INVALID_CELL
+      titleWrap.appendChild(titleText)
+      titleCell.appendChild(titleWrap)
+
+      const assigneeCell = document.createElement('td')
+      assigneeCell.className = 'ado-tree-assignee'
+      assigneeCell.textContent = INVALID_CELL
+
+      const stateCell = document.createElement('td')
+      stateCell.className = 'ado-tree-state'
+      stateCell.textContent = INVALID_CELL
+
+      const hoursCell = document.createElement('td')
+      hoursCell.className = 'ado-tree-hours num'
+      hoursCell.textContent = INVALID_CELL
+
+      tr.append(idCell, typeCell, titleCell, assigneeCell, stateCell, hoursCell)
+      tbody.appendChild(tr)
+    }
+
     function renderAdoWorkItemTreeRow(tbody, node, depth, parentNodeId) {
       const tr = document.createElement('tr')
       tr.className = 'ado-tree-row'
@@ -439,7 +489,7 @@
       }
     }
 
-    function renderAdoWorkItemDetails(resultEl, data) {
+    function renderAdoWorkItemDetails(resultEl, rootResults) {
       resultEl.hidden = false
       resultEl.replaceChildren()
       resultEl.classList.remove('is-error')
@@ -451,19 +501,30 @@
       table.className = 'ado-workitem-tree'
 
       const tbody = document.createElement('tbody')
-      renderAdoWorkItemTreeRow(tbody, data, 0, '')
+      for (const item of rootResults) {
+        if (item.node) {
+          renderAdoWorkItemTreeRow(tbody, item.node, 0, '')
+        } else {
+          renderInvalidWorkItemRow(tbody, item.id || item.raw)
+        }
+      }
       table.appendChild(buildAdoTreeColgroup())
       table.appendChild(buildAdoTreeHeader(tbody))
       table.appendChild(tbody)
       tableWrap.appendChild(table)
       resultEl.appendChild(tableWrap)
 
-      const childCount = Array.isArray(data.children) ? data.children.length : 0
-      if (childCount === 0) {
-        const empty = document.createElement('p')
-        empty.className = 'ado-tree-empty'
-        empty.textContent = 'No child work items (Test Cases are excluded).'
-        resultEl.appendChild(empty)
+      const validRoots = rootResults.filter((item) => item.node)
+      if (validRoots.length === 1) {
+        const childCount = Array.isArray(validRoots[0].node.children)
+          ? validRoots[0].node.children.length
+          : 0
+        if (childCount === 0) {
+          const empty = document.createElement('p')
+          empty.className = 'ado-tree-empty'
+          empty.textContent = 'No child work items (Test Cases are excluded).'
+          resultEl.appendChild(empty)
+        }
       }
     }
 
@@ -501,13 +562,12 @@
         return null
       }
 
-      const parsed = parseWorkItemFromUserInput(input.value)
-      const id = parsed.id
-      if (!id) {
+      const items = parseWorkItemsFromUserInput(input.value)
+      if (items.length === 0) {
         statusEl.textContent = ''
         renderAdoLinkError(
           resultEl,
-          'Enter a work item ID, or paste a full dev.azure.com work item URL.',
+          'Enter one or more work item IDs separated by commas, or paste full dev.azure.com work item URLs.',
         )
         return null
       }
@@ -519,7 +579,7 @@
         }
       }
 
-      statusEl.textContent = 'Loading work item and children…'
+      statusEl.textContent = 'Loading work items and children…'
       if (!linkOpts.keepTotalsWhileLoading) setTaskHoursTotal(null)
       resultEl.hidden = true
       resultEl.replaceChildren()
@@ -527,34 +587,62 @@
       setLinkLoading(true)
 
       try {
-        const qs = new URLSearchParams()
-        if (parsed.org) qs.set('org', parsed.org)
-        if (parsed.project) qs.set('project', parsed.project)
-        const q = qs.toString()
-        const apiUrl = `${apiPath}/${encodeURIComponent(id)}${q ? `?${q}` : ''}`
-        const res = await fetch(apiUrl, { credentials: 'same-origin' })
-        let data = {}
-        try {
-          data = await res.json()
-        } catch {
-          data = {}
-        }
+        let authError = null
+        const rootResults = await Promise.all(
+          items.map(async (parsed) => {
+            if (!parsed.id || !/^\d+$/.test(parsed.id)) {
+              return { raw: parsed.raw, id: parsed.raw, error: 'Invalid work item ID' }
+            }
+
+            const qs = new URLSearchParams()
+            if (parsed.org) qs.set('org', parsed.org)
+            if (parsed.project) qs.set('project', parsed.project)
+            const q = qs.toString()
+            const apiUrl = `${apiPath}/${encodeURIComponent(parsed.id)}${q ? `?${q}` : ''}`
+            const res = await fetch(apiUrl, { credentials: 'same-origin' })
+            let data = {}
+            try {
+              data = await res.json()
+            } catch {
+              data = {}
+            }
+            if (!res.ok) {
+              const msg =
+                typeof data.error === 'string' ? data.error : `Request failed (${res.status})`
+              if (data.needsLogin && !authError) authError = { msg, data }
+              return { id: parsed.id, raw: parsed.raw, error: msg }
+            }
+            return { id: parsed.id, raw: parsed.raw, node: data }
+          }),
+        )
+
         statusEl.textContent = ''
-        if (!res.ok) {
-          const msg =
-            typeof data.error === 'string' ? data.error : `Request failed (${res.status})`
-          renderAdoLinkError(resultEl, msg, data, { keepTotals: linkOpts.restoreSavedTotalsOnError })
+        const successful = rootResults.filter((item) => item.node)
+        if (successful.length === 0) {
+          if (authError) {
+            renderAdoLinkError(resultEl, authError.msg, authError.data, {
+              keepTotals: linkOpts.restoreSavedTotalsOnError,
+            })
+          } else {
+            renderAdoWorkItemDetails(resultEl, rootResults)
+            setTaskHoursTotal(null)
+            linkedSnapshot = null
+          }
           restoreSavedTotalsIfNeeded()
           return null
         }
 
-        renderAdoWorkItemDetails(resultEl, data)
-        const totalHours = sumChildTaskCompletedHours(data)
+        renderAdoWorkItemDetails(resultEl, rootResults)
+        const totalHours = successful.reduce(
+          (sum, item) => sum + sumChildTaskCompletedHours(item.node),
+          0,
+        )
         setTaskHoursTotal(totalHours)
+        const linkedId = normalizeAdoIdList(input.value)
         linkedSnapshot = {
-          id: String(data.id),
+          id: linkedId,
           actualMdays: Math.round((totalHours / hoursPerDay) * 10) / 10,
-          webUrl: data.webUrl || '',
+          webUrl: successful.length === 1 ? successful[0].node.webUrl || '' : '',
         }
         onSnapshotChange(linkedSnapshot)
         return linkedSnapshot
